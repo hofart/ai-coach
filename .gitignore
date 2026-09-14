@@ -1,0 +1,22 @@
+# web (Nuxt) - fora deste repo por enquanto
+web/
+
+# dependencies
+node_modules/
+
+# Nuxt / build output
+.nuxt/
+.output/
+dist/
+
+# env
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
