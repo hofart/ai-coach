@@ -1,65 +1,75 @@
 # Domínio: regras de treino de bike
 
+> Regras genéricas de geração/ajuste de treino — aplicáveis a qualquer atleta usando o ai-coach.
+> O dado específico do atleta atual (medidas, rotina semanal, zonas, restrições de saúde, região)
+> vive em `docs/atleta.md`, estruturado por `.specs/athlete-profile-schema.md`. Este arquivo nunca
+> deve voltar a ganhar um valor específico de pessoa — se uma regra precisar de um número/decisão
+> do atleta, ele vem de `docs/atleta.md`, não daqui.
+
 ## Perfil do atleta
 
-- Medição atual: **relógio Garmin com monitor de frequência cardíaca** — sem medidor de potência ainda (plano de compra futura). Todo o treino, por ora, deve ser prescrito e avaliado por FC (zonas da tabela abaixo), não por watts. Quando o medidor de potência chegar, adicionar zonas de potência (% FTP) como camada extra, sem descartar as zonas de FC.
-- Peso: **71–72 kg** — Altura: **1,80 m**
-- Nível/experiência: **iniciante em treino estruturado de estrada (speed)** — pedala speed há ~8 meses (desde ~jan/2026; o histórico em `docs/evolucao-mensal.md` só começa a registrar volume real a partir de março/2026, os primeiros ~2 meses provavelmente foram adaptação/sem plano formal ainda). Andava de **MTB desde 2019**, mas de forma recreativa, sem intensidade/estrutura — a base de ciclismo "sério" é recente.
-- Objetivo: **andar bem**, com ênfase específica em **construir uma base muscular sólida** — um processo que o atleta reconhece que leva tempo, não é sobre resultado rápido. Sem prova específica marcada. Isso reforça a decisão de carga estável sem mesociclos formais (ver "Periodização") — o processo é de construção de base de longo prazo, não de pico para evento.
-- Disponibilidade semanal: ver "Rotina semanal atual" abaixo
-- Equipamento: ver "Rotina semanal atual" abaixo
+Ver `docs/atleta.md` (instância atual) e `.specs/athlete-profile-schema.md` (schema e
+questionário de onboarding). Se `docs/atleta.md` não existir, ou estiver claramente desatualizado
+(o atleta menciona mudança de rotina, peso, objetivo, lesão nova), a skill `treinador-bike` deve
+rodar o onboarding descrito no schema antes de gerar ou ajustar qualquer treino.
 
-## Rotina semanal atual (bike)
+## Rotina semanal e alternância de carga
 
-4x de bike por semana:
+A rotina semanal (quais dias, que tipo de sessão, se é estruturado ou não) e qualquer padrão de
+alternância de carga entre semanas (ex.: semana A/B) são **dado do atleta**, registrados em
+`docs/atleta.md` — não regra fixa deste arquivo. A regra genérica é:
 
-| Dia    | Treino                              | Observação |
-|--------|--------------------------------------|------------|
-| Terça  | Intervalado (estrada)                | Fixo toda semana |
-| Quinta | Intervalado **ou** Z2 (estrada)       | Alterna semana a semana — ver "Alternância semanal" abaixo |
-| Sábado | Longão com pelotão (estrada)         | **Não prescrever estrutura/zonas** — o atleta sai acompanhado, não segue um plano estruturado nesse dia. Sugerir apenas a **duração** (~2h30 ou ~3–4h, conforme "Alternância semanal" abaixo). Subidas de referência (contexto, não prescrição): São Martinho da Serra e Silveira Martins (ver `.specs/climbs.md`) |
-| Domingo| MTB com a esposa                     | **Não prescrever nada.** Pedal social, ~2h — só registrar como carga da semana (duração/FC se disponível), não sugerir treino |
-
-### Alternância semanal (equilíbrio de carga)
-
-Padrão observado nos treinos reais da assessoria (ver `.specs/training-base.md`): a carga da semana
-é equilibrada alternando entre duas estruturas, para não empilhar carga alta nos 3 dias
-estruturados (terça/quinta/sábado) toda semana:
-
-- **Semana tipo A — 2 intervalados**: terça intervalado + quinta intervalado → longão de sábado
-  **reduzido** (~2h30, em vez de 3–4h), pois a semana já teve duas sessões de alta intensidade.
-- **Semana tipo B — 1 intervalado + Z2**: terça intervalado + quinta **Z2 (~2h, endurance)** →
-  longão de sábado pode ser o **padrão mais longo** (~3–4h), já que a quinta foi mais leve.
-
-Alternar A/B semana a semana (ex.: A na semana 1, B na semana 2, A na semana 3...). Isso é uma
-regra de equilíbrio aproximada, não uma fórmula rígida — ajustar conforme sensação/fadiga
-relatada e a restrição de saúde (síndrome do trato iliotibial) acima.
-
-Equipamento: bike de estrada é a usada nos treinos estruturados (terça/quinta/sábado); MTB é só para o pedal leve de domingo.
-
-Além da bike, o atleta faz **natação** às quartas e sextas (2x/semana), com plano de reduzir para 1x/semana.
+- Dias marcados como **não estruturados** no perfil (`estruturado: false`) recebem apenas
+  sugestão de duração/carga a partir do histórico recente — nunca blocos/zonas prescritos.
+- Um dia pode ser marcado como **estruturado por sugestão, com opção social** (ex.: o sábado do
+  atleta atual) — a skill prescreve um treino completo (zonas/blocos) como padrão, mas o atleta
+  pode optar no dia por uma atividade social/em grupo em vez disso; nesse caso, só a duração/carga
+  da atividade social importa, a estrutura sugerida não precisa ser seguida.
+- Se o perfil tiver um padrão de alternância (`alternancia_carga`), aplicá-lo consistentemente
+  semana a semana, ajustando conforme fadiga relatada e as restrições de saúde do perfil.
+- Não empilhar dois dias de alta carga seguidos entre os dias estruturados do perfil (ver
+  "Restrições de saúde" abaixo).
 
 ## Restrições de saúde
 
-- Histórico de lesão: **síndrome do trato iliotibial** (dor lateral no joelho), ocorrida em **29/08/2026**, associada a carga de treino total muito alta (bike + natação acumulados). Registrado como histórico/referência para dosar carga futura — não é um fato para reanalisar a cada decisão, só o limite prático de volume a respeitar.
-- Evidência real: ver `docs/evolucao-mensal.md` — de março a agosto/2026 o atleta fez consistentemente **127% a 267% do volume proposto** pela assessoria (nunca abaixo de 100%), com pico em abril/maio (267%/229%). Agosto foi o mês de menor volume da série, coincidindo com o período da lesão. Ao gerar/ajustar treinos, tratar excesso recorrente sobre o proposto como sinal de risco, não como "capacidade extra" do atleta.
-- Regra: ao calcular a carga semanal, considerar o volume de natação como parte da carga total do atleta, não apenas o volume de bike — evitar recomendar aumento de intensidade/volume na bike em semanas de carga cruzada alta.
-- Priorizar dias de folga/recuperação real entre o treino intervalado de quinta e o longão de sábado.
+Regra genérica: toda `restricao_saude` registrada no perfil do atleta (`docs/atleta.md`) é
+histórico/referência para dosar carga futura, não um fato a reanalisar a cada decisão — é o limite
+prático de volume/intensidade a respeitar. Ao calcular a carga semanal:
+
+- Somar a carga de **todas** as atividades do perfil (`outras_atividades` + sessões de bike), não
+  só a bike isolada.
+- Tratar excesso recorrente do atleta sobre o volume proposto (ver histórico em
+  `docs/evolucao-mensal.md` ou equivalente) como **sinal de risco**, nunca como "capacidade extra".
+- Priorizar folga/recuperação real entre dias de alta carga consecutivos.
 
 ## Zonas de treino
 
-Baseadas em frequência cardíaca (bpm), a partir da FC limiar (LTHR) atual do atleta.
+Modelo: zonas calculadas a partir da FC limiar (LTHR) do atleta — 5 zonas (Z1 Recuperação, Z2
+Endurance/base, Z3 Tempo, Z4 Limiar, Z5 VO2max), mesma lógica usada por Zwift/TrainerRoad. Quando
+o atleta tiver medidor de potência, adicionar zonas de %FTP como camada extra, sem descartar FC
+(ver RNF05 em `requirements.md`).
 
-| Zona | Faixa (bpm) | Nome |
-|------|-------------|------|
-| Z1   | 95 – 124    | Recuperação |
-| Z2   | 125 – 136   | Endurance (base) |
-| Z3   | 137 – 147   | Tempo |
-| Z4   | 148 – 159   | Limiar (Threshold) |
-| Z5   | 160 – 177   | VO2max |
+As faixas de bpm/%FTP **vigentes** ficam em `docs/atleta.md`, não aqui. Atualizar essa tabela a
+cada reteste de LTHR/FTP (skill `teste-fthr`), registrando a mudança com data em
+`docs/decisions.md`.
 
-> Modelo simplificado de 5 zonas por FC (mesma lógica usada por Zwift/TrainerRoad), baseado na LTHR atual do atleta.
-> Atualizar esta tabela sempre que a LTHR mudar (reteste). Registrar a data da última atualização em `docs/decisions.md`, para saber quando as zonas ficaram desatualizadas.
+## Contingência climática (dias estruturados de estrada)
+
+Dias estruturados ao ar livre (terça/quinta, e o longão de sábado quando aplicável) dependem do
+tempo. Regra genérica — detalhes de fonte/coordenadas/limiar ficam em `.specs/weather.md`
+(arquivo regional, como `.specs/climbs.md`):
+
+- Só consultar previsão dentro da **janela de ~7 dias** (fora disso, não é confiável — prescrever
+  o treino padrão e sinalizar que será refinado perto da data).
+- Se houver risco relevante de chuva na janela provável do treino, apresentar ao atleta as
+  alternativas que façam sentido pelo equipamento registrado em `docs/atleta.md`
+  (`rolo_indoor`, `acesso_academia`):
+  - Nenhuma mudança na estrutura/zonas se a alternativa for **rolo em casa**.
+  - Estrutura **adaptada para duração menor (40–60min)** se a alternativa for **academia** (bike
+    estacionária) — não é o mesmo estímulo da rua, prioriza o bloco principal.
+  - **Treino normal na rua** se houver janela de trégua dentro da disponibilidade do atleta.
+- Se o atleta não tiver nenhuma alternativa indoor registrada, não inventar uma opção — sinalizar
+  o risco de chuva e perguntar como o atleta prefere lidar com aquele dia.
 
 ## Tipos de treino
 
@@ -68,25 +78,33 @@ Baseadas em frequência cardíaca (bpm), a partir da FC limiar (LTHR) atual do a
 - Força (baixa cadência)
 - Recuperação ativa
 - Longão
-- Teste de FC limiar (LTHR) — substitui o teste de FTP enquanto não há medidor de potência
+- Teste de FC limiar (LTHR) ou FTP, conforme `metodo_medicao` do perfil — via skill `teste-fthr`.
 
 ## Periodização
 
-**Decisão**: sem fases de mesociclo formais (base/build/peak/taper) — não há prova/evento-alvo
-(objetivo é "andar bem", ver Perfil do atleta). Carga mantida relativamente estável ao longo do
-ano, variando apenas pela alternância semanal A/B (ver "Alternância semanal"). Reavaliar essa
-decisão se um objetivo/prova específica surgir no futuro.
+A decisão de usar (ou não) fases de mesociclo formais (base/build/peak/taper) depende do
+`objetivo`/`prova_alvo` do perfil do atleta (`docs/atleta.md`):
 
-- Progressão de volume/intensidade: ajustada pelo reteste de LTHR a cada 6–8 semanas (ver skill `teste-fthr`), não por blocos de periodização formais.
-- Semanas de recuperação (deload): não há regra fixa definida ainda — se a carga/fadiga pedir, tratar como exceção pontual (reduzir a semana), não como calendário fixo.
-- **Cadência de geração: 1x por mês** (ver `.specs/output-format.md`), não semanal — gerar o mês
-  inteiro de uma vez (terça/quinta alternando semana tipo A/B, duração de sábado por semana) para
-  evitar reupload semanal no Garmin.
+- Sem prova-alvo definida: carga estável, variando só pela alternância semanal do perfil (se
+  houver) — ver decisão atual registrada em `docs/decisions.md`.
+- Com prova-alvo definida: reavaliar a necessidade de periodização formal.
+
+Progressão de volume/intensidade: ajustada pelo reteste de LTHR/FTP a cada 6–8 semanas (skill
+`teste-fthr`), não por blocos de periodização formais, a menos que uma prova-alvo justifique.
+
+Semanas de recuperação (deload): sem regra fixa — tratar como exceção pontual conforme
+fadiga/histórico, não calendário fixo, a menos que o perfil registre uma preferência diferente.
+
+Cadência de geração: ver `.specs/output-format.md` (hoje mensal para o atleta atual — ajustar se o
+perfil mudar essa preferência).
 
 ## Regras de geração do treino
 
 Consolidado — já coberto em detalhe nas seções acima, listado aqui como índice:
 
-- **Distribuição do volume semanal**: ver "Rotina semanal atual" e "Alternância semanal" (terça fixa intervalado; quinta e duração de sábado alternam semana A/B).
-- **Ajuste por fadiga/histórico**: ver "Restrições de saúde" (não tratar excesso sobre o proposto como capacidade segura) e a regra 7 da skill `treinador-bike` (subida puxada no sábado → reduzir intervalado de terça seguinte).
-- **Restrição de dias consecutivos**: não empilhar dois dias de alta carga seguidos (ver "Restrições de saúde").
+- **Distribuição do volume semanal**: ver "Rotina semanal e alternância de carga" + `docs/atleta.md`.
+- **Ajuste por fadiga/histórico**: ver "Restrições de saúde" e a regra 7 da skill `treinador-bike`
+  (ex.: subida puxada no sábado → reduzir intervalado de terça seguinte, quando essa rotina se
+  aplicar ao perfil atual).
+- **Restrição de dias consecutivos**: não empilhar dois dias de alta carga seguidos entre os dias
+  estruturados do perfil.

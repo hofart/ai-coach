@@ -5,10 +5,12 @@
 ## Entidades
 
 ### Atleta
-- peso_kg, altura_cm
-- objetivo (texto livre — hoje: "andar bem", sem prova marcada)
-- medição: `fc` (sem powermeter ainda)
-- equipamento: bike_estrada, mtb
+- Schema genérico definido em `.specs/athlete-profile-schema.md`; instância com os dados reais do
+  atleta atual em `docs/atleta.md` (fonte única — `.specs/domain.md` não guarda mais valor
+  específico de pessoa).
+- Campos: regiao, nivel_experiencia, objetivo/prova_alvo, peso_kg, altura_cm, metodo_medicao
+  (`fc`|`potencia`|`ambos`), zonas_atuais, equipamentos, rotina_semanal, alternancia_carga,
+  outras_atividades, restricoes_saude.
 
 ### ZonaFC
 - zona (Z1–Z5), faixa_min_bpm, faixa_max_bpm, nome
@@ -55,8 +57,8 @@
 ## Relações
 
 ```
-Atleta 1—N TesteFTHR
-Atleta 1—N ZonaFC (vigente_desde controla qual é a atual)
+Atleta (docs/atleta.md) 1—N TesteFTHR
+Atleta 1—N ZonaFC (vigente_desde controla qual é a atual; valores vigentes ficam em docs/atleta.md)
 TesteFTHR 1—N ZonaFC (uma calibração pode gerar as 5 zonas)
 Atleta 1—N PlanoMensal
 PlanoMensal 1—N SemanaTreino
@@ -71,4 +73,5 @@ Atleta 1—N HistoricoMensal
 
 - Entrada manual do usuário (colar dados ou exportar GPX/TCX/CSV de uma atividade) — caminho padrão por enquanto.
 - Integração com Strava API: **desde 01/06/2026 a Strava API é paga** (US$ 11,99/mês, tier Standard, até 10 usuários) — não é mais gratuita para novos apps. Isso deixa de fazer sentido para um projeto pessoal de 1 usuário; usar exportação manual em vez de integração direta, a menos que o custo mensal seja aceitável.
-- Integração com Garmin: **Training API é aprovação de parceiro**, sem self-service — não viável agora. Upload de treino gerado é manual (ver `output-format.md`).
+- Integração com Garmin: **Training API é aprovação de parceiro**, sem self-service — não viável agora.
+- Integração com iGPSPORT (dispositivo usado para seguir o treino na bike desde 16/10/2026, ver `docs/atleta.md`): **sem API pública/self-service** para publicar treino estruturado no dispositivo; único caminho oficial é upload manual via USB-C. Projetos de comunidade (engenharia reversa) existem, mas não são suportados. Upload de treino gerado é manual (ver `output-format.md`).

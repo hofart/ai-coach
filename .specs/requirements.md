@@ -12,7 +12,8 @@
 - **RF08** — Sinalizar quando o volume real exceder significativamente o proposto, como alerta de risco (não como capacidade extra).
 - **RF09** — Nunca prescrever dois dias de alta carga consecutivos sem folga/redução compensatória.
 - **RF10** — Gerar a saída em texto estruturado, em lote mensal (não semanal).
-- **RF11** *(futuro)* — Exportar o plano gerado em arquivo compatível com Garmin (.fit/.zwo) para reduzir o trabalho manual de criar cada treino.
+- **RF11** *(futuro)* — Exportar o plano gerado em arquivo compatível com o dispositivo usado para seguir o treino na bike (hoje: iGPSPORT 200S, ver `docs/atleta.md`; Garmin permanece só como fonte de FC) para reduzir o trabalho manual de criar cada treino.
+- **RF12** — Para dias estruturados de estrada dentro de ~7 dias da data atual, consultar a previsão do tempo da região do atleta (`.specs/weather.md`) e, havendo risco relevante de chuva na janela do treino, oferecer alternativas (rolo em casa e/ou bike na academia, conforme equipamento do atleta em `docs/atleta.md`) além do treino normal na rua — nunca sugerir uma alternativa que o atleta não tem.
 
 ## Requisitos Não Funcionais (RNF)
 
@@ -24,4 +25,4 @@
 - **RNF06 — Privacidade**: dados pessoais de saúde/treino ficam em arquivos locais; nenhuma integração externa deve receber esses dados além do estritamente necessário e explicitamente autorizado.
 - **RNF07 — Idioma**: conteúdo gerado em português (PT-BR).
 - **RNF08 — Performance**: geração deve ser praticamente instantânea — as specs são pequenas (poucos KB), não há necessidade de processamento pesado ou de subagentes paralelos para isso (ver decisão anterior sobre não usar sub-agentes para "rodar as specs").
-- **RNF09 — Usabilidade da saída**: o texto gerado precisa ser claro o suficiente para o atleta transcrever manualmente para o Garmin Connect sem ambiguidade (nomes de zona, duração, estrutura de blocos bem definidos).
+- **RNF09 — Usabilidade da saída**: o texto gerado precisa ser claro o suficiente para o atleta transcrever/copiar manualmente para o dispositivo de treino (hoje: iGPSPORT 200S, ver `docs/atleta.md`) sem ambiguidade (nomes de zona, duração, estrutura de blocos bem definidos).

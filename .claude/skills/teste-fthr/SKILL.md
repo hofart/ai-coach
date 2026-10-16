@@ -1,12 +1,21 @@
 ---
 name: teste-fthr
-description: Skill especializada em testes de FC limiar (FTHR/LTHR) do atleta — protocolo de teste, cálculo de LTHR, cadência de reteste recomendada, e regras para decidir quando atualizar as zonas de FC em .specs/domain.md. Usar sempre que o atleta reportar um teste de FTHR/limiar, pedir para calcular LTHR, perguntar quando deve retestar, ou pedir para revisar/atualizar as zonas de FC.
+description: Skill especializada em testes de FC limiar (FTHR/LTHR) do atleta — protocolo de teste, cálculo de LTHR, cadência de reteste recomendada, e regras para decidir quando atualizar as zonas de FC vigentes em docs/atleta.md. Usar sempre que o atleta reportar um teste de FTHR/limiar, pedir para calcular LTHR, perguntar quando deve retestar, ou pedir para revisar/atualizar as zonas de FC.
 ---
 
 # Teste de FTHR (FC limiar)
 
-O atleta não tem medidor de potência (ver `.specs/domain.md`), então o equivalente ao teste de FTP
-é o **teste de FTHR/LTHR** (FC limiar), usado para calibrar as zonas de FC em `.specs/domain.md`.
+O atleta não tem medidor de potência (`metodo_medicao: fc` em `docs/atleta.md`), então o
+equivalente ao teste de FTP é o **teste de FTHR/LTHR** (FC limiar), usado para calibrar as zonas
+de FC vigentes em `docs/atleta.md` (modelo genérico de cálculo descrito em `.specs/domain.md`).
+
+## Antes de rodar o teste — checar se é seguro
+
+Consultar `docs/atleta.md` ("Restrições de saúde"). Se houver uma restrição marcada como **ativa
+ou recorrente** (ex.: lesão inflamada no momento), **não aplicar o protocolo de esforço máximo**
+abaixo — um teste de 20min no limiar pode agravar a lesão. Sinalizar isso ao atleta e sugerir
+esperar liberação (fisio/sensação) antes de retestar. Manter as zonas atuais de `docs/atleta.md`
+enquanto o teste estiver suspenso por esse motivo.
 
 ## Protocolo padrão de teste
 
@@ -36,13 +45,14 @@ de Coggan — ver `.specs/methodology.md`.)
 
 ## Regra de decisão: atualizar as zonas ou não?
 
-- Se o novo LTHR calculado for **próximo** (poucos bpm) do que as zonas atuais em `.specs/domain.md` já
-  implicam, pode atualizar direto.
+- Se o novo LTHR calculado for **próximo** (poucos bpm) do que as zonas atuais em `docs/atleta.md`
+  já implicam, pode atualizar direto.
 - Se houver uma **discrepância grande** (ex.: >5-8 bpm) em relação às zonas atuais, **não
   sobrescrever automaticamente**. Sinalizar a discrepância ao atleta, listar possíveis causas
   (seção acima) e sugerir confirmar com um reteste em condições mais controladas antes de mudar
-  `.specs/domain.md`.
-- Toda atualização de zonas feita deve ser registrada com data em `docs/decisions.md`.
+  `docs/atleta.md`.
+- Toda atualização de zonas feita deve ser registrada com data em `docs/decisions.md` e aplicada
+  na tabela "Zonas atuais" de `docs/atleta.md`.
 - Todo teste realizado (mesmo que não gere mudança de zona) deve ser registrado em `docs/teste-fthr.md`, mantendo o histórico de testes (data, protocolo, resultado, LTHR calculado, decisão tomada).
 
 ## Cadência de reteste recomendada

@@ -1,6 +1,10 @@
 # Subidas de referência (terreno real de treino)
 
-> Escopo para registrar as serras/subidas usadas no treino do atleta, na região de Santa Maria/RS.
+> Arquivo regional, referenciado pelo campo `regiao` do perfil do atleta (`docs/atleta.md` —
+> schema em `.specs/athlete-profile-schema.md`). Generalizar o perfil do atleta não generaliza o
+> terreno: outra região/atleta exigiria um arquivo de subidas equivalente a este, não a edição
+> deste aqui. Escopo para registrar as serras/subidas usadas no treino do atleta, na região de
+> Santa Maria/RS.
 > Dados exatos (distância do trecho de subida, desnível, inclinação média/máxima) ainda **não
 > estão confirmados** — o atleta não tem os números precisos. Preencher assim que houver uma
 > fonte confiável (GPX/Strava segment do próprio atleta ou do pelotão).
